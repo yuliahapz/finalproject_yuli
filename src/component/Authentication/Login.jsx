@@ -1,37 +1,37 @@
-import axios from 'axios';
-import { useState } from 'react';
+import axios from 'axios';  // Memanggil axios untuk Api
+import { useState } from 'react'; // Memanggil useState untuk state management
 
 const Login = () => {
-    const [login, setLogin] = useState(false);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [login, setLogin] = useState(false);  // State untuk mengecek apakah user sudah login
+    const [username, setUsername] = useState("");  // State untuk menyimpan data username
+    const [password, setPassword] = useState("");  // State untuk menyimpan data password
+    const [error, setError] = useState("");  // State untuk menyimpan pesan error
 
-    const handleLogin = () => {
-        if (username && password) {
+    const handleLogin = () => { // Fungsi untuk login
+        if (username && password) { // Memeriksa apakah username dan password ada di api makanya kita bisa liat username di get postman
             // Melakukan request login dengan menambahkan API key di header
             axios.post("https://travel-journal-api-bootcamp.do.dibimbing.id/api/v1/login", 
             {
-                email: username,
-                password: password,
+                email: username,  // Menggunakan data username
+                password: password,  // Menggunakan data password
             }, 
             {
                 headers: {
                     'apiKey': '24405e01-fbc1-45a5-9f5a-be13afcd757c' // Menambahkan API key di header
                 }
             })
-            .then((res) => {
-                console.log(res.data.data.token);
-                setLogin(true);
+            .then((res) => {  // Memeriksa respon dari API
+                console.log(res.data.data.token); // Mengambil token dari response
+                setLogin(true);  // Mengubah state login menjadi true
                 localStorage.setItem("token", res.data.data.token);
                 window.location.reload(); // Reload untuk menyegarkan tampilan setelah login
             })
             .catch((err) => {
-                console.log(err);
-                setError("Login Failed. Please check your username and password.");
+                console.log(err);  // Menghandle error
+                setError("Login Failed. Please check your username and password."); // Menampilkan pesan error
             });
-        } else {
-            setError("Please enter your username and password.");
+        } else { // Jika username dan password tidak ada
+            setError("Please enter your username and password.");  // Menampilkan pesan error
         }
     };
 
@@ -43,27 +43,27 @@ const Login = () => {
             <input 
                 id="username"
                 type="text" 
-                value={username} 
-                onChange={(e) => setUsername(e.target.value)} 
+                value={username} // Menggunakan state username sebagai value
+                onChange={(e) => setUsername(e.target.value)} // Menggunakan state username sebagai onChange
                 style={{ padding: '10px', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc', width: '100%' }}
             />
             <label htmlFor="password" style={{ marginBottom: '10px' }}>Password</label>
             <input 
                 id="password"
                 type="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)} 
+                value={password} // Menggunakan state password sebagai value
+                onChange={(e) => setPassword(e.target.value)}  // Menggunakan state password sebagai onChange
                 style={{ padding: '10px', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc', width: '100%' }}
             />
             <button 
-                onClick={handleLogin}
+                onClick={handleLogin} //kalau dia klik tombol login, dia akan menj login
                 style={{ padding: '10px 20px', backgroundColor: '#28a745', color: 'white', borderRadius: '5px', border: 'none', cursor: 'pointer' }}
             >
                 Login
             </button>
-            {login && <p style={{ color: "green", marginTop: '20px' }}>Login Successful!</p>}
+            {login && <p style={{ color: "green", marginTop: '20px' }}>Login Successful!</p>} // Jika user login, menampilkan pesan
         </div>
     );
 };
 
-export default Login;
+export default Login; // Mengexport kalau diatas ada import bawahnya wajib export
