@@ -1,11 +1,9 @@
-import Login from "./component/Authentication/Login";
-const App = () => {
+import { useRoutes } from "react-router-dom";
+import { routeList } from "./Routes/RouteList";
 
-  return (
-    <div>
-    <h1>Ini adalah App</h1>
-    <Login />
-    </div>
-  )
-}
+const App = () => {
+    const element = useRoutes(routeList);
+    return element;
+};
+
 export default App;

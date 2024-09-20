@@ -1,16 +1,17 @@
 import axios from 'axios';  // Memanggil axios untuk Api
 import { useState } from 'react'; // Memanggil useState untuk state management
+import { useNavigate } from 'react-router-dom'; // Menggunakan useNavigate untuk navigasi
 
 const Login = () => {
     const [login, setLogin] = useState(false);  // State untuk mengecek apakah user sudah login
     const [username, setUsername] = useState("");  // State untuk menyimpan data username
     const [password, setPassword] = useState("");  // State untuk menyimpan data password
     const [error, setError] = useState("");  // State untuk menyimpan pesan error
+    const navigate = useNavigate();  // Hook untuk navigasi
 
     const handleLogin = () => { // Fungsi untuk login
-        if (username && password) { // Memeriksa apakah username dan password ada di api makanya kita bisa liat username di get postman
-            // Melakukan request login dengan menambahkan API key di header
-            axios.post("https://travel-journal-api-bootcamp.do.dibimbing.id/api/v1/login", 
+        if (username && password) { // Memeriksa apakah username dan password ada di api
+            axios.post("https://sport-reservation-api-bootcamp.do.dibimbing.id/api/v1/login", 
             {
                 email: username,  // Menggunakan data username
                 password: password,  // Menggunakan data password
@@ -23,8 +24,8 @@ const Login = () => {
             .then((res) => {  // Memeriksa respon dari API
                 console.log(res.data.data.token); // Mengambil token dari response
                 setLogin(true);  // Mengubah state login menjadi true
-                localStorage.setItem("token", res.data.data.token);
-                window.location.reload(); // Reload untuk menyegarkan tampilan setelah login
+                localStorage.setItem("token", res.data.data.token); // Menyimpan token di localStorage
+                navigate("/dashboard"); // Navigasi ke halaman dashboard setelah login sukses
             })
             .catch((err) => {
                 console.log(err);  // Menghandle error
@@ -56,14 +57,15 @@ const Login = () => {
                 style={{ padding: '10px', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc', width: '100%' }}
             />
             <button 
-                onClick={handleLogin} //kalau dia klik tombol login, dia akan menj login
+                onClick={handleLogin} // Jika tombol login diklik, fungsi handleLogin akan dipanggil
                 style={{ padding: '10px 20px', backgroundColor: '#28a745', color: 'white', borderRadius: '5px', border: 'none', cursor: 'pointer' }}
             >
                 Login
             </button>
-            {login && <p style={{ color: "green", marginTop: '20px' }}>Login Successful!</p>} // Jika user login, menampilkan pesan
+            {login && <p style={{ color: "green", marginTop: '20px' }}>Login Successful!</p>} {/* Jika user login, menampilkan pesan */}
+            <p>Not registered yet? <a href="/register">Register</a></p>
         </div>
     );
 };
 
-export default Login; // Mengexport kalau diatas ada import bawahnya wajib export
+export default Login;
