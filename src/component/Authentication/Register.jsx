@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast"; // Tidak ada ToastContainer
 import { useNavigate } from "react-router-dom";
-import "./App.css"; // Pastikan Anda sudah memiliki file CSS
+import "./component.css"; // Pastikan Anda sudah memiliki file CSS
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -108,14 +108,14 @@ const Register = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
-          <button type="submit">Register</button>
+          <button className="register-button" type="submit">Register</button>
         </form>
         <div className="signin-link">
           <p>Already have an account? <a href="/login">Log in</a></p>
         </div>
       </div>
       <div className="register-image">
-        <img src="https://www.newzyexecutive.fr/wp-content/uploads/2018/05/Le-basket-ball.jpg" alt="Register" />
+        <img src="https://media.istockphoto.com/id/494431473/zh/%E7%85%A7%E7%89%87/last-second.jpg?s=612x612&w=0&k=20&c=Z1-4ek1NC25nzjS-0fFtZBjCk6HRENPHPbv-clPSV1w=" alt="Register" />
       </div>
     </div>
   );
