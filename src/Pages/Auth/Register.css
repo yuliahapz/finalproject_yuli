@@ -1,0 +1,138 @@
+/* Main layout for large screens */
+.register-page {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+    width: 100%;
+    justify-content: center;
+}
+
+.left-panel {
+    background-color: #f18c6e; /* Orange background */
+    width: 45%; /* Adjust width as needed */
+    justify-content: center;
+    align-items: center;
+    color: white; /* Text color for better contrast */
+    text-align: center;
+    flex-direction: column;
+    display: flex;
+}
+
+.left-panel h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.2rem;
+}
+
+.left-panel p {
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.right-panel {
+    background-color: white; /* White background */
+    width: 55%; /* Adjust width as needed */;
+    justify-content: center;
+    display: absolute;
+    align-items: center;
+    flex-direction: column;
+    display: contents;   /* untuk memakai flexbox */
+}
+
+.right-panel input,
+.right-panel textarea {
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+    border: 0,20px solid #ccc;
+    border-radius: 25px;
+    width: 100%;
+}
+
+.right-panel input:focus {
+    outline: none;
+    border-color: #f18c6e;
+}
+
+.right-panel h2 {
+    margin-bottom: 1.2rem;
+    font-size: 1.5rem;
+    text-align: center;
+    justify-content: center;
+}
+
+/* Form Container */
+.register-form {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Adjust as needed */
+}
+
+/* Register Button */
+.register {
+    background-color: #f18c6e;
+    color: white;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.register:hover {
+    background-color: #e97b5f;
+}
+
+/* Responsive Styles */
+
+/* For tablets and medium screens */
+@media (max-width: 768px) {
+    .left-panel,
+    .right-panel {
+        width: 100%; /* Stack the panels on top of each other */
+        height: 50vh; /* Adjust the height for each panel */
+    }
+
+    .left-panel h1 {
+        font-size: 2rem;
+    }
+
+    .left-panel p {
+        font-size: 1rem;
+    }
+
+    .register-page {
+        flex-direction: column; /* Stack vertically */
+    }
+
+    .register-form {
+        padding: 1.5rem; /* Adjust padding for smaller screens */
+    }
+}
+
+/* For mobile devices */
+@media (max-width: 480px) {
+    .left-panel h1 {
+        font-size: 1.5rem; /* Smaller font size */
+    }
+
+    .left-panel p {
+        font-size: 0.9rem; /* Smaller font size */
+    }
+
+    .register-form {
+        padding: 1rem; /* Further reduce padding */
+    }
+
+    .right-panel input,
+    .right-panel textarea {
+        font-size: 0.9rem; /* Smaller input text */
+    }
+
+    .register {
+        padding: 0.7rem 1rem;
+    }
+}

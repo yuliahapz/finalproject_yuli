@@ -1,0 +1,134 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f8f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Create Post Container */
+.create-post-container {
+    background-color: white;
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px; /* Adjust as needed */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Create Post Container Hover Effect */
+.create-post-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Heading */
+.create-post-container h1 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+}
+
+/* Label Styling */
+.create-post-container label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Input Styling */
+.create-post-container input[type="text"],
+.create-post-container input[type="file"] {
+    padding: 0.9rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    width: 100%;
+    font-size: 1rem;
+    color: #555;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Focused Input Styling */
+.create-post-container input:focus {
+    outline: none;
+    border-color: #f18c6e; /* Change to your theme color */
+    box-shadow: 0 0 6px rgba(241, 140, 110, 0.3);
+}
+
+/* Submit Button Styling */
+.create-post-container button {
+    background-color: #f18c6e; /* Primary button color */
+    color: white;
+    padding: 0.9rem 1.5rem;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Submit Button Hover Effect */
+.create-post-container button:hover {
+    background-color: #e97b5f; /* Darker shade on hover */
+    transform: translateY(-3px);
+}
+
+/* Disabled Submit Button */
+.create-post-container button:disabled {
+    background-color: #ccc; /* Disabled button color */
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Image Preview Styling */
+.image-preview {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.uploaded-image {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .create-post-container {
+        padding: 2rem; /* Adjust padding for smaller screens */
+        max-width: 90%; /* Allow form to take more width */
+    }
+
+    .create-post-container h1 {
+        font-size: 1.8rem; /* Adjust heading font size */
+    }
+}
+
+@media (max-width: 480px) {
+    .create-post-container {
+        padding: 1.5rem;
+    }
+
+    .create-post-container h1 {
+        font-size: 1.5rem; /* Further reduce font size */
+    }
+
+    .create-post-container input {
+        font-size: 0.9rem; /* Smaller input text */
+    }
+
+    .create-post-container button {
+        padding: 0.8rem 1.2rem; /* Adjust button padding */
+        font-size: 0.9rem; /* Smaller button text */
+    }
+}

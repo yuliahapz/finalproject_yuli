@@ -1,24 +1,29 @@
-import { Navigate } from "react-router-dom";
-import Login from "../component/Authentication/Login";
-import Register from "../component/Authentication/Register";
-import Categories from "../Sport_Category/Categories";
+import Register from "../Pages/Auth/Register";
+import Login from "../Pages/Auth/Login";
+import CreatePost from "../Pages/Post/CreatePost";
+import Dashboard from "../Pages/Dashboard";
+import UpdatePost from "../Pages/Post/UpdatePost";
 
-export const routeList = [
+export const routeList =[
     {
-        path: "/",
-        element: <Navigate to="/dashboard" />,
+         path : "/login",
+         element: <Login />
     },
     {
-        path: "/login",
-        element: <Login />,
+        path : "/register",
+        element: <Register />
     },
     {
-        path: "/register",
-        element: <Register />,
+        path : "/createpost",
+        element: <CreatePost />
     },
     {
-        path: "/dashboard",
-        element: <Categories />,
+        path : "/updatepost",
+        element: <UpdatePost />
+    },
+    {
+        path : "/",
+        element: <Dashboard />
     }
 ]
 
