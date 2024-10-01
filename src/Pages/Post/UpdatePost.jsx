@@ -1,184 +1,167 @@
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { toast, Toaster } from "react-hot-toast";
-import './UpdatePost.css'; // Import the CSS file
+import { useNavigate } from "react-router-dom";
 
-const EditPost = ({ postId }) => { // Accept postId as a prop
-  const [imageUrl, setImageUrl] = useState(''); // URL dari image setelah upload
-  const [previewUrl, setPreviewUrl] = useState(''); // URL untuk pratinjau image
-  const [caption, setCaption] = useState('');   // Caption untuk post
-  const [file, setFile] = useState(null);       // File yang dipilih
-  const [loading, setLoading] = useState(false); // Status loading saat submit
+const CreatePost = () => {
+  const [imageUrl, setImageUrl] = useState(''); // URL for the image after upload
+  const [previewUrl, setPreviewUrl] = useState(''); // Preview URL for the selected image
+  const [caption, setCaption] = useState('');   // Caption for the post
+  const [file, setFile] = useState(null);       // Selected file
+  const [loading, setLoading] = useState(false); // Loading state for the submit button
 
-  // Buat ref untuk input file
   const fileInputRef = useRef(null);
+  const navigate = useNavigate(); // useNavigate hook for navigation
 
-  // Ambil token dari localStorage
-  const token = localStorage.getItem('token'); // Token dari localStorage
+  const token = localStorage.getItem('token'); 
 
-  // Fetch existing post data on component mount
-  useEffect(() => {
-    const fetchPostData = async () => {
-      if (!token) {
-        toast.error("Token is missing. Please log in again.");
-        return;
-      }
-
-      try {
-        const config = {
-          headers: {
-            apiKey: 'c7b411cc-0e7c-4ad1-aa3f-822b00e7734b',
-            Authorization: `Bearer ${token}`, // Gunakan token dari localStorage
-          },
-        };
-
-        const response = await axios.get(
-          `https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/posts/${postId}`, // Ganti dengan URL untuk mendapatkan post
-          config
-        );
-
-        // Set existing post data
-        setImageUrl(response.data.imageUrl);
-        setCaption(response.data.caption);
-        setPreviewUrl(response.data.imageUrl); // Set preview URL to existing image
-      } catch (error) {
-        console.error("Failed to fetch post data:", error.response?.data || error.message);
-        toast.error('Failed to fetch post data');
-      }
-    };
-
-    fetchPostData();
-  }, [postId, token]);
-
-  // Handle perubahan file input (menyimpan file yang dipilih dan membuat URL pratinjau)
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
 
-    // Buat URL sementara untuk pratinjau image yang dipilih
     const filePreviewUrl = URL.createObjectURL(selectedFile);
     setPreviewUrl(filePreviewUrl);
   };
 
-  // Upload image ke server
+  if (!token) {
+    toast.error("Token is missing. Please log in again.");
+    return null; 
+  }
+
   const handleUpload = async () => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("image", file); // Ganti 'imageUrl' menjadi 'image' sesuai dengan API
+    formData.append("image", file);
 
     try {
       const config = {
         headers: {
           apiKey: 'c7b411cc-0e7c-4ad1-aa3f-822b00e7734b',
-          Authorization: `Bearer ${token}`, // Gunakan token dari localStorage
+          Authorization: `Bearer ${token}`,
         },
       };
 
       const response = await axios.post(
-        'https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/upload-image', // Ganti dengan URL upload yang sesuai
+        'https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/upload-image',
         formData,
         config
       );
 
-      setImageUrl(response.data.url); // Set URL image setelah upload berhasil
+      setImageUrl(response.data.url);
       toast.success('Image uploaded successfully!');
+      navigate('/');
+      return response.data.url; // Return the uploaded image URL
     } catch (error) {
-      console.error("Upload failed:", error.response?.data || error.message); // Perbaiki log error untuk melihat pesan lengkap
+      console.error("Upload failed:", error.response?.data || error.message);
       toast.error('Failed to upload image');
+      return null;
     }
   };
 
-  // Submit form (caption dan URL image)
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (!imageUrl || !caption) {
-      toast.error('Please upload an image and fill in the caption');
+    if (!file) {
+      toast.error('Please select an image to upload');
+      return;
+    }
+
+    if (!caption) {
+      toast.error('Please enter a caption');
       return;
     }
 
     setLoading(true);
 
-    const postData = { imageUrl, caption };
+    // First upload the image
+    const uploadedImageUrl = await handleUpload();
+
+    if (!uploadedImageUrl) {
+      setLoading(false);
+      return; // Stop if image upload fails
+    }
+
+    const postData = { imageUrl: uploadedImageUrl, caption };
 
     try {
       const config = {
         headers: {
           "Content-Type": 'application/json',
           apiKey: 'c7b411cc-0e7c-4ad1-aa3f-822b00e7734b',
-          Authorization: `Bearer ${token}`, // Gunakan token dari localStorage
+          Authorization: `Bearer ${token}`,
         },
       };
 
-      const response = await axios.put(
-        `https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/posts/${postId}`, // Ganti dengan URL untuk mengedit post
+      const response = await axios.post(
+        'https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/create-post',
         postData,
         config
       );
-
       console.log(response);
-      toast.success('Successfully edited post');
+      toast.success('Post created successfully!');
 
-      // Kosongkan input setelah berhasil submit
-      setCaption('');  // Kosongkan caption setelah sukses submit
-      setImageUrl(''); // Kosongkan image URL setelah sukses submit
-      setPreviewUrl(''); // Kosongkan pratinjau setelah submit
-      setFile(null);    // Reset file input
-
-      // Reset input file
-      fileInputRef.current.value = null; // Reset nilai input file
+      setCaption('');
+      setImageUrl('');
+      setPreviewUrl('');
+      setFile(null);
+      fileInputRef.current.value = null;
     } catch (error) {
-      console.error("Post editing failed:", error.response?.data || error.message);
-      toast.error('Failed to edit post');
+      console.error("Failed to create post:", error.response?.data || error.message);
+      toast.error('Failed to create post');
     } finally {
       setLoading(false);
     }
   };
 
-  // Otomatis upload file setelah dipilih
-  useEffect(() => {
-    if (file) {
-      handleUpload();
-    }
-  }, [file]);
-
   return (
-    <div className="create-post-container">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Toaster position="top-center" reverseOrder={false} />
-      <h1>Edit Post</h1>
-      <form onSubmit={handleFormSubmit}>
-        <label>
-          Image:
-          <input 
-            type="file" 
-            ref={fileInputRef}  // Tambahkan ref pada input file
-            onChange={handleFileChange} 
-          /> {/* File input */}
-        </label>
-
-        {/* Tampilkan pratinjau image jika ada */}
-        {previewUrl && (
-          <div className="image-preview">
-            <img src={previewUrl} alt="Preview" className="uploaded-image" />
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6 text-center">Create Post</h1>
+        <form onSubmit={handleFormSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Image:
+            </label>
+            <input 
+              type="file"
+              ref={fileInputRef} 
+              onChange={handleFileChange}
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              accept="image/*"
+            />
           </div>
-        )}
 
-        <label>
-          Caption:
-          <input
-            type="text"
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)} // Handle input caption
-            required // Tambahkan required untuk validasi
-          />
-        </label>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Submitting...' : 'Submit'}
-        </button>
-      </form>
+          {previewUrl && (
+            <div className="image-preview mt-4">
+              <img src={previewUrl} alt="Preview" className="rounded-lg w-full h-48 object-cover" />
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Caption:
+            </label>
+            <input
+              type="text"
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)} 
+              required
+              className="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="Enter your caption here"
+            />
+          </div>
+          <button 
+            type="submit" 
+            disabled={loading} 
+            className={`w-full py-2 px-4 font-semibold rounded-lg shadow-md text-white ${loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}>
+            {loading ? 'Submitting...' : 'Submit'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default EditPost;
+export default CreatePost;
