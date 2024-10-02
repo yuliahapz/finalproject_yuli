@@ -4,6 +4,9 @@ import CreatePost from "../Pages/Post/CreatePost";
 import Dashboard from "../Pages/Dashboard";
 import UpdatePost from "../Pages/Post/UpdatePost";
 import Profile from "../User/Profile";
+import UpdateProfile from "../User/UpdateProfile";
+import MyFollowers from "../User/MyFollowers";
+import MyFollowing from "../User/MyFollowing";
 
 export const routeList =[
     {
@@ -29,6 +32,17 @@ export const routeList =[
     {
         path : "/Profile",
         element: <Profile />
+    },
+    {
+        path : "/updateprofile",
+        element: <UpdateProfile />
+    },{
+        path : "/MyFollowers",
+        element: <MyFollowers />
+    },
+    {
+        path : "/MyFollowing",
+        element: <MyFollowing />
     }
 ]
 

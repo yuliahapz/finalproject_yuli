@@ -2,18 +2,21 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import MyFollowing from "./MyFollowing";
+import MyFollowers from "./MyFollowers";
 
 const Profile = () => {
-  const [id, setId] = useState();
-  const [username, setUsername] = useState();
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [profilePictureUrl, setProfilePictureUrl] = useState();
-  const [phoneNumber, setPhoneNumber] = useState();
-  const [bio, setBio] = useState();
-  const [website, setWebsite] = useState();
-  const [totalFollowing, setTotalFollowing] = useState();
-  const [totalFollowers, setTotalFollowers] = useState();
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [bio, setBio] = useState("");
+  const [website, setWebsite] = useState("");
+  const [totalFollowing, setTotalFollowing] = useState(0);
+  const [totalFollowers, setTotalFollowers] = useState(0);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,6 +26,7 @@ const Profile = () => {
       return;
     }
 
+    // Fetch user profile data
     axios
       .get("https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/user", {
         headers: {
@@ -32,28 +36,26 @@ const Profile = () => {
       })
       .then((response) => {
         const {
-          id,
           username,
           name,
           email,
-          profile_picture_url,
-          phone_number,
+          profilePictureUrl,
+          phoneNumber,
           bio,
           website,
-          total_following,
-          total_followers,
+          totalFollowing,
+          totalFollowers,
         } = response.data.data;
 
-        setId(id);
         setUsername(username);
         setName(name);
         setEmail(email);
-        setProfilePictureUrl(profile_picture_url);
-        setPhoneNumber(phone_number);
+        setProfilePictureUrl(profilePictureUrl);
+        setPhoneNumber(phoneNumber);
         setBio(bio);
         setWebsite(website);
-        setTotalFollowing(total_following);
-        setTotalFollowers(total_followers);
+        setTotalFollowing(totalFollowing);
+        setTotalFollowers(totalFollowers);
       })
       .catch((error) => {
         console.log(error);
@@ -61,35 +63,53 @@ const Profile = () => {
       });
   }, [navigate]);
 
+  const handleFollowingClick = () => {
+    navigate("/myfollowing");
+    setShowFollowing(true);
+    setShowFollowers(false);
+  };
+
+  const handleFollowersClick = () => {
+    navigate("/myfollowers");
+    setShowFollowers(true);
+    setShowFollowing(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center">
-      <div className="bg-white p-6 mt-8 rounded-lg shadow-lg max-w-xl w-full">
+      <div className="bg-white p-8 mt-12 rounded-lg shadow-lg max-w-2xl w-full">
         {/* Profile Header */}
-        <div className="flex items-center space-x-4">
-          <div className="w-24 h-24">
+        <div className="flex items-center space-x-6">
+          <div className="relative w-28 h-28">
             <img
-              src={profilePictureUrl}
+              src={profilePictureUrl || "default-profile.png"}
               alt="Profile"
               className="w-full h-full rounded-full object-cover"
             />
+            <button
+              className="absolute inset-x-0 bottom-0 bg-blue-500 text-white text-sm py-1 px-3 rounded-full transform hover:bg-blue-600 transition duration-200"
+              onClick={() => navigate("/updateprofile")}
+            >
+              Edit Profile
+            </button>
           </div>
-          <div>
-            <h1 className="text-2xl font-semibold">{username}</h1>
-            <p className="text-gray-600">{name}</p>
-            <p className="text-gray-600">{email}</p>
-            <p className="text-gray-600">{phoneNumber}</p>
+          <div className="flex-1">
+            <h1 className="text-3xl font-semibold text-gray-800 mb-2 text-center">{username}</h1>
+            <p className="text-gray-500 mb-2 text-center">{name}</p>
+            <p className="text-gray-600 mb-2 text-center">{email}</p>
+            <p className="text-gray-600 text-center">{phoneNumber}</p>
           </div>
         </div>
 
         {/* Bio and Website */}
-        <div className="mt-4">
-          <p className="text-gray-800">{bio}</p>
+        <div className="mt-6 border-t pt-4">
+          <p className="text-gray-700">{bio}</p>
           {website && (
             <a
               href={website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
+              className="text-blue-500 hover:underline block mt-2"
             >
               {website}
             </a>
@@ -97,16 +117,20 @@ const Profile = () => {
         </div>
 
         {/* Follow Info */}
-        <div className="mt-6 flex space-x-8 justify-center">
-          <div className="text-center">
-            <p className="text-lg font-bold">{totalFollowing}</p>
+        <div className="mt-8 flex justify-around items-center text-center">
+          <div onClick={handleFollowingClick} className="cursor-pointer">
+            <p className="text-2xl font-bold">{totalFollowing}</p>
             <p className="text-gray-600">Following</p>
           </div>
-          <div className="text-center">
-            <p className="text-lg font-bold">{totalFollowers}</p>
+          <div onClick={handleFollowersClick} className="cursor-pointer">
+            <p className="text-2xl font-bold">{totalFollowers}</p>
             <p className="text-gray-600">Followers</p>
           </div>
         </div>
+
+        {/* Following and Followers Lists */}
+        {showFollowing && <MyFollowing />}
+        {showFollowers && <MyFollowers />}
       </div>
     </div>
   );
