@@ -192,7 +192,7 @@ const Dashboard = () => {
 
                                         {/* Comments Section */}
                                         <div className="mt-4">
-                                            <p className="font-bold"><span className="text-gray-900">{(comments[post.id] || []).length} </span>
+                                            <p className="font-bold"><span className="text-gray-500">{(comments[post.id] || []).length}</span>
                                             Comments</p>
                                             {comments[post.id] && comments[post.id].length > 0 ? (
                                                 comments[post.id].map((comment, index) => (

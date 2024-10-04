@@ -7,6 +7,9 @@ import Profile from "../User/Profile";
 import UpdateProfile from "../User/UpdateProfile";
 import MyFollowers from "../User/MyFollowers";
 import MyFollowing from "../User/MyFollowing";
+import CreateComment from "../Pages/Comment/CreateComment";
+import DeleteComment from "../Pages/Comment/DeleteComment";
+import LikePost from "../Pages/Like/LikePost";
 
 export const routeList =[
     {
@@ -43,6 +46,18 @@ export const routeList =[
     {
         path : "/MyFollowing",
         element: <MyFollowing />
+    },
+    {
+        path : "/CreateComment",
+        element: <CreateComment />
+    },
+    {
+        path : "/DeleteComment",
+        element: <DeleteComment />
+    },
+    {
+        path : "/Likepost",
+        element: <LikePost />
     }
 ]
 
