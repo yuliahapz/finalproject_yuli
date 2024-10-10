@@ -8,5 +8,12 @@ export default {
     extend: {},
   },
   plugins: [],
+  // Add Google Fonts
+  corePlugins: {
+    preflight: ({ addBase }) => {
+      addBase({
+        '@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap");': {},
+      });
+    },
+  },
 }
-

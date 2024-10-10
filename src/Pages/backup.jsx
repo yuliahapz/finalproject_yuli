@@ -2,13 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { ChatBubbleBottomCenterTextIcon, TrashIcon } from '@heroicons/react/24/outline'; // Import heart and chat icons
+import { ChatBubbleBottomCenterTextIcon, TrashIcon } from '@heroicons/react/24/outline'; 
 import { Link } from "react-router-dom";
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { HeartIcon as HeartIconOutline } from '@heroicons/react/24/outline';
 import CommentForm from "./Comment/CreateComment";
-import MyFollowingStories from "./Story/MyFollowingStories";
-import CreateStory from "./Story/CreateStory";
+import DeleteComment from "./Comment/DeleteComment";
+
 
 const Dashboard = () => {
     const [posts, setPosts] = useState([]);
@@ -69,7 +69,7 @@ const Dashboard = () => {
     
         axios.post(
             url, 
-            { postId }, // Mengirim postId di body request
+            { postId },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -84,7 +84,7 @@ const Dashboard = () => {
                         return {
                             ...post,
                             isLike: !isLike,
-                            totalLikes: isLike ? Math.max(post.totalLikes - 1, 0) : post.totalLikes + 1 // Menghindari nilai negatif
+                            totalLikes: isLike ? Math.max(post.totalLikes - 1, 0) : post.totalLikes + 1
                         };
                     }
                     return post;
@@ -113,15 +113,11 @@ const Dashboard = () => {
         setCurrentPostId(null);
     };
 
-    const handleDeleteComment = (postId, commentIndex) => {
-        setComments((prevComments) => {
-            const updatedComments = [...prevComments[postId]];
-            updatedComments.splice(commentIndex, 1);
-            return {
-                ...prevComments,
-                [postId]: updatedComments,
-            };
-        });
+    const handleDeleteComment = (postId, commentId) => {
+        setComments((prevComments) => ({
+            ...prevComments,
+            [postId]: prevComments[postId].filter(comment => comment.id !== commentId)
+        }));
     };
 
     const goToNextPage = () => {
@@ -162,8 +158,6 @@ const Dashboard = () => {
             <div className="flex-1 xl:ml-64">
                 <header className="bg-gray-800 p-4 text-white flex justify-between items-center">
                     <h1 className="text-2xl font-bold">Dashboard</h1>
-                    <CreateStory />
-                    <MyFollowingStories />
                 </header>
 
                 {/* Posts Section */}
@@ -175,7 +169,7 @@ const Dashboard = () => {
                         ) : (
                             posts.map((post) => (
                                 <div key={post.id} className="photo-card bg-white shadow-lg rounded-lg overflow-hidden max-w-xs">
-                                    <img src={post.imageUrl} alt={post.caption} className="w-full h-40 object-cover" onError={(e) => { e.target.onerror = null; e.target.src = 'https://cdn1-production-images-kly.akamaized.net/J_qaSn7xpC5d-kbHx-wCsOiFsuY=/800x450/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4770934/original/018943800_1710311605-mountains-8451480_1280.jpg'; }} />
+                                    <img src={post.imageUrl} alt={post.caption} className="w-full h-40 object-cover" onError={(e) => { e.target.onerror = null; e.target.src = 'fallback-image-url'; }} />
                                     <div className="p-2">
                                         <p className="text-sm font-bold">{post.caption}</p>
                                         <div className="flex justify-between mt-2">
@@ -190,62 +184,50 @@ const Dashboard = () => {
                                 <button onClick={() => handleOpenModal(post.id)}>
                                 <ChatBubbleBottomCenterTextIcon className="h-6 w-6 text-gray-400 cursor-pointer" />
                                 </button>
+                                <span>{(comments[post.id] || []).length} comments</span>
                                 </div>
 
-                                        {/* Comments Section */}
+                                <div> 
+                                    {comments[post.id]?.map(newComment => (
+                                        <div key={newComment.id}>
+                                            <p>{newComment.text}</p>
+                                            <DeleteComment postId={post.id} commentId={newComment.id} onDeleteComment={handleDeleteComment} />
+                                            </div>
+                                    ))}
+                                </div>
+
                                         <div className="mt-4">
                                             <p className="font-bold"><span className="text-gray-900">{(comments[post.id] || []).length} </span>
                                             Comments</p>
-                                            {comments[post.id] && comments[post.id].length > 0 ? (
-                                                comments[post.id].map((comment, index) => (
-                                                    <div key={index} className="flex justify-between items-center">
-                                                        <p className="text-gray-600">{comment}</p>
-                                                        <button onClick={() => handleDeleteComment(post.id, index)}>
-                                                            <TrashIcon className="h-5 w-5 text-red-500" />
-                                                        </button>
-            
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <p className="text-gray-400">No comments yet.</p>
-                                            )}
+                                            {comments[post.id]?.map(comment => (
+                                                <div key={comment.id} className="bg-gray-100 rounded-md p-2 mt-2">
+                                                    <p>{comment.text}</p>
+                                                    <button
+                                                        className="text-red-500 hover:underline"
+                                                        onClick={() => handleDeleteComment(post.id, comment.id)}
+                                                    >
+                                                        <TrashIcon className="w-5 h-5 inline-block" /> Delete
+                                                    </button>
+                                                </div>
+                                            ))}
                                         </div>
+                                        <CommentForm postId={post.id} onAddComment={handleAddComment} />
                                     </div>
                                 </div>
                             ))
                         )}
                     </div>
+                    <div className="flex justify-center space-x-4 mt-8">
+                        <button onClick={goToPreviousPage} disabled={currentPage === 1} className="bg-gray-300 text-gray-700 px-4 py-2 rounded">
+                            Previous
+                        </button>
+                        <span className="text-gray-700">{currentPage} of {totalPages}</span>
+                        <button onClick={goToNextPage} disabled={currentPage === totalPages} className="bg-gray-300 text-gray-700 px-4 py-2 rounded">
+                            Next
+                        </button>
+                    </div>
                 </section>
-
-                {/* Pagination */}
-                <div className="flex justify-center items-center space-x-2 mt-8">
-                    <button 
-                        onClick={goToPreviousPage} 
-                        disabled={currentPage === 1} 
-                        className={`inline-block w-24 px-4 py-1 text-sm ${currentPage === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700'} rounded text-center`}
-                    >
-                        Previous
-                    </button>
-                    <button 
-                        onClick={goToNextPage} 
-                        disabled={currentPage === totalPages} 
-                        className={`inline-block w-24 px-4 py-1 text-sm ${currentPage === totalPages ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700'} rounded text-center`}
-                    >
-                        Next
-                    </button>
-                </div>
-                <span className="block text-center mt-4">Page {currentPage} of {totalPages}</span>
             </div>
-
-            {/* Modal */}{isModalOpen && (
-            <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white rounded-lg p-4 w-96">
-            <h2 className="text-lg font-bold mb-4">Add Comment</h2>
-            <CommentForm postId={currentPostId} onAddComment={handleAddComment} onClose={handleCloseModal} />
-            <button className="bg-red-500 w-full text-white py-2 rounded" onClick={handleCloseModal}>Close</button>
-            </div>
-            </div>
-)}
         </div>
     );
 };

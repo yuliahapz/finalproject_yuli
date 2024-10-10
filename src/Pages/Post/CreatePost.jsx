@@ -9,7 +9,6 @@ const CreatePost = () => {
   const [caption, setCaption] = useState('');   // Caption for the post
   const [file, setFile] = useState(null);       // Selected file
   const [loading, setLoading] = useState(false); // Loading state for the submit button
-
   const fileInputRef = useRef(null);
   const navigate = useNavigate(); // useNavigate hook for navigation
 
@@ -50,7 +49,7 @@ const CreatePost = () => {
 
       setImageUrl(response.data.url);
       toast.success('Image uploaded successfully!');
-      navigate('/');
+      navigate('/explore');
       return response.data.url; // Return the uploaded image URL
     } catch (error) {
       console.error("Upload failed:", error.response?.data || error.message);
