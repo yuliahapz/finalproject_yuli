@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Logout = () => {
+export const Logout = () => {
   const [isOpen, setIsOpen] = useState(false); // Manage the state of the popup
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+const handleLogout = () => {
     localStorage.removeItem('token');  // Remove token from local storage
     navigate('/login');  // Redirect to the login page
   };

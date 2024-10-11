@@ -1,18 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-
-const StoryById = () => {
+import PropTypes from 'prop-types';
+const StoryById = ({ storyId }) => {
     const [story, setStory] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-    const navigate = useNavigate();
-    const { storyId } = useParams(); // Ensure the parameter is in lowercase and matches your route
 
     useEffect(() => {
         const fetchStory = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
-                navigate('/login'); // Redirect to login if no token
+                console.error("No token found. Please log in again.");
                 return;
             }
             try {
@@ -22,60 +18,31 @@ const StoryById = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+                console.log(response.data.data);
                 setStory(response.data.data); // Assuming the response structure
             } catch (error) {
                 console.error("Error fetching story:", error);
             }
         };
         fetchStory();
-    }, [storyId, navigate]); // Make sure to include storyId and navigate in dependencies
-   
+    }, [storyId]);
+
     if (!story) return <div>Loading...</div>;
 
-    // Function to open and close the modal
-    const toggleModal = () => setIsModalOpen(!isModalOpen);
-
+    StoryById.propTypes = {
+        storyId: PropTypes.string.isRequired,
+    };
     return (
         <div className="flex flex-col items-center">
             {/* Story image */}
             <img 
-                src={story.imageUrl} 
-                alt={story.caption} 
-                className="w-24 h-24 rounded-full object-cover cursor-pointer" 
-                onClick={toggleModal} // Open modal on click
+                src={story.imageUrl || "https://www.shutterstock.com/image-photo/osaka-japan-september-13-2024-260nw-2518457567.jpg" } 
+                alt={story.name} 
+                className="w-full h-150 rounded-lg object-cover" 
+                onError={(e) => (e.target.src = "https://www.shutterstock.com/image-photo/osaka-japan-september-13-2024-260nw-2518457567.jpg")}
             />
-            <p className="mt-2 text-center">{story.caption}</p>
-
-            {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={toggleModal}>
-                    <div className="bg-white p-4 rounded-lg relative" onClick={(e) => e.stopPropagation()}>
-                        {/* X button to close the modal */}
-                        <button 
-                            className="absolute top-2 right-2 text-2xl font-bold text-gray-600 hover:text-gray-900"
-                            onClick={toggleModal}
-                        >
-                            &times; {/* HTML entity for the 'X' symbol */}
-                        </button>
-                        {/* Story image inside the modal */}
-                        <img 
-                            src={story.user?.profilePictureUrl || "https://www.wowkeren.com/images/photo/dua_lipa.jpg"}
-                            alt={story.user?.username}
-                            className="w-24 h-24 rounded-full object-cover"
-                            onError={(e) => e.target.src = "https://www.wowkeren.com/images/photo/dua_lipa.jpg"}
-                        />
-                        <p className="mt-2 bold text-center">{story.user?.username}</p>
-                        <img 
-                            src={story.imageUrl || "https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_3000,h_2000/activities/yxifjtwljrke7iurjkpb/DisneylandResortinCaliforniaThemeParkTickets-Klook.jpg"} 
-                            alt={story.name} 
-                            className="max-w-full max-h-[80vh] object-cover"
-                            onError={(e) => e.target.src = "https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_3000,h_2000/activities/yxifjtwljrke7iurjkpb/DisneylandResortinCaliforniaThemeParkTickets-Klook.jpg"}
-                        />
-                        <p>{story.caption}</p>
-                        <pre>{story.createdAt|| toLocaleDateString}</pre>
-                    </div>
-                </div>
-            )}
+            <p className="mt-2 text-center text-xl font-semibold">{story.username}</p>
+            <p className="mt-2 text-gray-700">{story.caption}</p>
         </div>
     );
 };

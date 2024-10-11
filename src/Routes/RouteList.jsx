@@ -17,8 +17,9 @@ import PostById from "../Pages/Post/PostById";
 import Explore from "../Pages/Post/Explore";
 import Sidebar from "../Pages/Component/Sidebar";
 import Home from "../Home";
-import FollowUser from "../User/FollowUser";
+import FollowUser from "../Pages/Follow/FollowUser";
 import MyFollowingStories from "../Pages/Story/MyFollowingStories";
+import PostByUser from "../Pages/Post/PostByUser";
 
 
 export const routeList =[
@@ -103,6 +104,10 @@ export const routeList =[
     {
         path : "myfollowingstories",
         elemeny : <MyFollowingStories />
+    },
+    {
+        path : "PostByUser",
+        element : <PostByUser />
     }
     
 ]

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toggleLike } from '../Like/LikePost';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
@@ -87,7 +87,6 @@ const ExplorePost = () => {
   };
 
   const handleCommentAdded = (postId, newComment) => {
-    // Update posts state to reflect new comment
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
         post.id === postId ? { ...post, comments: [...post.comments, newComment] } : post
@@ -110,30 +109,35 @@ const ExplorePost = () => {
           <div key={post.id} className="max-w-md mx-auto bg-white rounded-lg shadow-md p-4 mb-4">
             <div className="px-4">
               <div className="flex items-center mb-4">
-              <Link to={`/profile/${post.user?.id}`}>
-                <img
-                  src={post.user?.profilePictureUrl || 'https://image.popmama.com/content-images/community/20240226/community-1983993eeb1b957b1909c5d64695189e.jpeg?1708934772'}
-                  alt={post.user?.username}
-                  className="w-8 h-8 mr-4 rounded-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcX9fmFcz6aeB7fkS13C5Rb4C8Yca7x0HNx9lc_8DsHsJp8BM3iWNnEhU70b3BHe4_OCM&usqp=CAU';
-                  }}
-                /></Link>
+                <Link to={`/profile/${post.user?.id}`}>
+                  <img
+                    src={post.user?.profilePictureUrl || 'https://image.popmama.com/content-images/community/20240226/community-1983993eeb1b957b1909c5d64695189e.jpeg?1708934772'}
+                    alt={post.user?.username}
+                    className="w-8 h-8 mr-4 rounded-full object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcX9fmFcz6aeB7fkS13C5Rb4C8Yca7x0HNx9lc_8DsHsJp8BM3iWNnEhU70b3BHe4_OCM&usqp=CAU';
+                    }}
+                  />
+                </Link>
 
-                <Link to={`/profile/${post.user?.id}`}><h2 className="text-lg font-bold">{post.user?.username || 'Sarah'}</h2></Link>
+                <Link to={`/profile/${post.user?.id}`}>
+                  <h2 className="text-lg font-bold">{post.user?.username || 'Sarah'}</h2>
+                </Link>
               </div>
               <div className="flex justify-center mb-4">
-  <img
-    src={post.imageUrl}
-    alt={post.caption}
-    className= "w-full h-full object-cover rounded-lg"
-    onError={(e) => {
-      e.target.onerror = null;
-      e.target.src = 'https://cdn1-production-images-kly.akamaized.net/J_qaSn7xpC5d-kbHx-wCsOiFsuY=/800x450/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4770934/original/018943800_1710311605-mountains-8451480_1280.jpg';
-    }}
-  />
-</div>
+                <Link to={`/post/${post.id}`}> {/* Updated link to post by ID */}
+                  <img
+                    src={post.imageUrl}
+                    alt={post.caption}
+                    className="w-full h-full object-cover rounded-lg cursor-pointer"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://cdn1-production-images-kly.akamaized.net/J_qaSn7xpC5d-kbHx-wCsOiFsuY=/800x450/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4770934/original/018943800_1710311605-mountains-8451480_1280.jpg';
+                    }}
+                  />
+                </Link>
+              </div>
               <div className="flex items-center ml-4 mb-4">
                 <button onClick={() => toggleLike(post.id, post.isLike, setPosts)}>
                   {post.isLike ? (
@@ -146,38 +150,55 @@ const ExplorePost = () => {
               </div>
               <p className="text-gray-600 mb-4">{post.caption}</p>
               <div className="mt-4">
-      <h2>Comments:</h2>
-      {comments[post.id] && comments[post.id].map((comment) => (
-        <div key={comment.id} className="mb-2">
-          <span className="font-bold">{comment.user.username}:</span> {comment.comment}
-        </div>
-      ))}
-    </div>
-              {/* Integrasikan CreateComment */}
+                <h2>Comments:</h2>
+                {comments[post.id] &&
+                  comments[post.id].map((comment) => (
+                    <div key={comment.id} className="mb-2">
+                      <span className="font-bold">{comment.user.username}:</span> {comment.comment}
+                    </div>
+                  ))}
+              </div>
               <CreateComment postId={post.id} onAddComment={handleCommentAdded} />
-              
             </div>
           </div>
         ))}
         <div className="flex justify-center items-center space-x-2 mt-8">
-          <button
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
             </svg>
           </button>
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m12.75 15 3-3m0 0-3-3m3 3H8.25m12.75 0a9 9 0 1 0-18 0 9 9 0 0 0 18 0Z"
+              />
             </svg>
           </button>
         </div>
-        <span className="block text-center mt-4">{currentPage} of {totalPages}</span>
       </div>
     </div>
   );

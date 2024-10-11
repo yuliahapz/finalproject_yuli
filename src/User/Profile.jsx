@@ -1,9 +1,11 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import MyFollowing from "./MyFollowing";
-import MyFollowers from "./MyFollowers";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { Image } from "antd";
+import MyFollowing from './MyFollowing';
+import MyFollowers from './MyFollowers';
+import PostByUser from '../Pages/Post/PostByUser';
 
 const Profile = () => {
   const [username, setUsername] = useState("");
@@ -15,8 +17,9 @@ const Profile = () => {
   const [website, setWebsite] = useState("");
   const [totalFollowing, setTotalFollowing] = useState(0);
   const [totalFollowers, setTotalFollowers] = useState(0);
-  const [showFollowing, setShowFollowing] = useState(false);
-  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowersModal, setShowFollowersModal] = useState(false); // Modal state for followers
+  const [showFollowingModal, setShowFollowingModal] = useState(false); // Modal state for following
+  const [id, setId] = useState(null); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,16 +29,17 @@ const Profile = () => {
       return;
     }
 
-    // Fetch user profile data
-    axios
-      .get("https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/user", {
-        headers: {
-          apiKey: "c7b411cc-0e7c-4ad1-aa3f-822b00e7734b",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
+    const fetchProfileData = async () => {
+      try {
+        const response = await axios.get("https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/user", {
+          headers: {
+            apiKey: "c7b411cc-0e7c-4ad1-aa3f-822b00e7734b",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         const {
+          id, 
           username,
           name,
           email,
@@ -47,6 +51,7 @@ const Profile = () => {
           totalFollowers,
         } = response.data.data;
 
+        setId(id); 
         setUsername(username);
         setName(name);
         setEmail(email);
@@ -56,84 +61,133 @@ const Profile = () => {
         setWebsite(website);
         setTotalFollowing(totalFollowing);
         setTotalFollowers(totalFollowers);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Failed to fetch profile data. Please try again later.");
-      });
+      } catch (error) {
+        toast.error("Failed to fetch profile data", error);
+      }
+    };
+
+    fetchProfileData();
   }, [navigate]);
 
-  const handleFollowingClick = () => {
-    navigate("/myfollowing");
-    setShowFollowing(true);
-    setShowFollowers(false);
-  };
-
-  const handleFollowersClick = () => {
-    navigate("/myfollowers");
-    setShowFollowers(true);
-    setShowFollowing(false);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
-      <div className="bg-white p-8 mt-12 rounded-lg shadow-lg max-w-2xl w-full">
-        {/* Profile Header */}
-        <div className="flex items-center space-x-6">
-          <div className="relative w-28 h-28">
-            <img
-              src={profilePictureUrl || "default-profile.png"}
-              alt="Profile"
-              className="w-full h-full rounded-full object-cover"
-            />
+    <div className="container mx-auto px-4">
+      {/* Action Buttons */}
+      <div className="flex justify-between p-4 mb-6">
+        <button onClick={() => navigate(-1)} className="bg-white-500 text-xs py-1 px-2 rounded">Back</button>
+        <button onClick={handleLogout} className="bg-white-500 text-xs py-1 px-2 rounded">Logout</button>
+      </div>
+  
+      {/* Main Profile Content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 border-b gap-8 mb-8 pb-4">
+        {/* Profile Image and Edit Button */}
+        <div className="flex flex-col justify-center items-center mb-4 relative">
+          <Image
+            src={
+              profilePictureUrl ||
+              'https://cdn1-production-images-kly.akamaized.net/J_qaSn7xpC5d-kbHx-wCsOiFsuY=/800x450/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4770934/original/018943800_1710311605-mountains-8451480_1280.jpg'
+            }
+            alt={username}
+            className="rounded-full object-cover"
+            width={200}
+            height={200}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src =
+                'https://cdn1-production-images-kly.akamaized.net/J_qaSn7xpC5d-kbHx-wCsOiFsuY=/800x450/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4770934/original/018943800_1710311605-mountains-8451480_1280.jpg';
+            }}
+          />
+          {/* Edit Profile Button */}
+          <button
+            className="mt-2 bg-blue-500 text-white text-xs py-1 px-2 rounded transform hover:bg-blue-600 transition duration-200 w-24"
+            onClick={() => navigate("/updateprofile")}
+          >
+            Edit Profile
+          </button>
+        </div>
+  
+        {/* User Details Section */}
+        <div className="flex flex-col justify-center">
+        <h1 className="text-2xl sm:text-4xl font-semibold text-gray-800 mb-2">{name}</h1>
+  
+          <div className="flex justify-center md:justify-start space-x-6 mt-4">
             <button
-              className="absolute inset-x-0 bottom-0 bg-blue-500 text-white text-sm py-1 px-3 rounded-full transform hover:bg-blue-600 transition duration-200"
-              onClick={() => navigate("/updateprofile")}
+              onClick={() => setShowFollowersModal(true)}
+              className="text-blue-500"
             >
-              Edit Profile
+              <span className="font-bold">{totalFollowers}</span> Followers
+            </button>
+            <button
+              onClick={() => setShowFollowingModal(true)}
+              className="text-blue-500"
+            >
+              <span className="font-bold">{totalFollowing}</span> Following
             </button>
           </div>
-          <div className="flex-1">
-            <h1 className="text-3xl font-semibold text-gray-800 mb-2 text-center">{username}</h1>
-            <p className="text-gray-500 mb-2 text-center">{name}</p>
-            <p className="text-gray-600 mb-2 text-center">{email}</p>
-            <p className="text-gray-600 text-center">{phoneNumber}</p>
-          </div>
-        </div>
-
-        {/* Bio and Website */}
-        <div className="mt-6 border-t pt-4">
-          <p className="text-gray-700">{bio}</p>
-          {website && (
+  
+          <div className="mt-4 text-center md:text-left">
+            <p className="text-sm">{id}</p>
+            <p className="text-sm">{username}</p>
+            <p className="text-sm">{email}</p>
+            <p className="text-sm">{bio || 'No bio available'}</p>
+            <p className="text-sm">
+              {phoneNumber || 'No phone number available'}
+            </p>
             <a
               href={website}
+              className="text-sm"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:underline block mt-2"
             >
               {website}
             </a>
-          )}
-        </div>
-
-        {/* Follow Info */}
-        <div className="mt-8 flex justify-around items-center text-center">
-          <div onClick={handleFollowingClick} className="cursor-pointer">
-            <p className="text-2xl font-bold">{totalFollowing}</p>
-            <p className="text-gray-600">Following</p>
-          </div>
-          <div onClick={handleFollowersClick} className="cursor-pointer">
-            <p className="text-2xl font-bold">{totalFollowers}</p>
-            <p className="text-gray-600">Followers</p>
           </div>
         </div>
-
-        {/* Following and Followers Lists */}
-        {showFollowing && <MyFollowing />}
-        {showFollowers && <MyFollowers />}
       </div>
+  
+      {/* Posts Section */}
+      {/* Posts Section */}
+<div 
+  className="w-full max-w-6xl border-gray-300 mx-auto"
+  style={{ maxHeight: "calc(100vh - 80px)", overflowY: "auto" }}
+>
+  {id && <PostByUser id={id} />}
+</div>
+
+      {/* Modal for Followers */}
+      {showFollowersModal && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-4 w-11/12 max-w-md">
+            <button
+              className="text-right text-gray-600 mb-4"
+              onClick={() => setShowFollowersModal(false)}
+            >
+              X
+            </button>
+            <MyFollowers />
+          </div>
+        </div>
+      )}
+  
+      {/* Modal for Following */}
+      {showFollowingModal && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-4 w-11/12 max-w-md">
+            <button
+              className="text-right text-gray-600 mb-4"
+              onClick={() => setShowFollowingModal(false)}
+            >
+              X
+            </button>
+            <MyFollowing />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
-
-export default Profile;
+  export default Profile;

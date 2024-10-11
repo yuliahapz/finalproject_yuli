@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 const UpdateProfile = () => {
   const [name, setName] = useState("");
@@ -83,12 +83,13 @@ const UpdateProfile = () => {
         }
       )
       .then((response) => {
+        console.log(response.data.data)
         toast.success("Profile updated successfully!");
         localStorage.setItem("currentEmail", email); // Update email in localStorage if changed
         navigate("/profile");
       })
       .catch((error) => {
-        toast.error("Failed to update profile.");
+        toast.error("Failed to update profile.",error);
       });
   };
   
@@ -96,6 +97,7 @@ const UpdateProfile = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
+      <button onClick={() => navigate(-1)} className="bg-white-500 text-xs rounded">Back</button>
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Edit Profile</h1>
 
         {/* Display the current profile picture */}
