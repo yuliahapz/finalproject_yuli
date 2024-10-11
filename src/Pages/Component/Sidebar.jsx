@@ -1,4 +1,4 @@
-import { Layout, Menu, Button } from 'antd';
+import { Layout, Menu} from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 
 import {
@@ -85,16 +85,15 @@ const Sidebar = () => {
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
       </div>
 
-      <div className="p-4"> {/* Tambahkan padding untuk tampilan lebih baik */}
-        <Button
+      <div className="p-7"> {/* Tambahkan padding untuk tampilan lebih baik */}
+      <LogoutOutlined className='text-white'/>
+        <button
           type="primary"
-          icon={<LogoutOutlined />}
           onClick={handleLogout}
-          block // Membuat button full width
-          className='bg-blue-500 hover:bg-red-600 '
+          className="text-white px-2 rounded"
         >
-          Logout
-        </Button>
+           Logout
+        </button>
       </div>
     </Layout.Sider>
   );
