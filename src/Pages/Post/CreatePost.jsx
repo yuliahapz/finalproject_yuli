@@ -4,7 +4,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
-  const [imageUrl, setImageUrl] = useState(''); // URL for the image after upload
+  const [ ,setImageUrl] = useState(''); // URL for the image after upload
   const [previewUrl, setPreviewUrl] = useState(''); // Preview URL for the selected image
   const [caption, setCaption] = useState('');   // Caption for the post
   const [file, setFile] = useState(null);       // Selected file

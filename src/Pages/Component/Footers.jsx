@@ -1,6 +1,3 @@
-// src/components/FooterComponent.jsx
-import React from 'react';
-
 const FooterComponent = () => {
   return (
     <footer style={{ textAlign: 'center' }}>

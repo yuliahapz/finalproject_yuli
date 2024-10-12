@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { toast } from 'react-hot-toast';
 import FollowButton from "./FollowButton";
-import unfollowUser from "./UnfollowUser";
+import unfollowUser from "./unfollowUser";
 
 export const FollowUser = ({ userId, isFollowing, onFollowChange }) => {
     const [loading, setLoading] = useState(false);

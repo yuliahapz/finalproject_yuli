@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import './UpdatePost.css'; // Import the CSS file
 
+// eslint-disable-next-line react/prop-types
 const EditPost = ({ postId }) => { // Accept postId as a prop
   const [imageUrl, setImageUrl] = useState(''); // URL dari image setelah upload
   const [previewUrl, setPreviewUrl] = useState(''); // URL untuk pratinjau image

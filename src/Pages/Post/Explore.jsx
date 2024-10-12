@@ -148,8 +148,8 @@ const ExplorePost = () => {
                 <span className="text-sm text-gray-600 ml-2">{post.totalLikes || 0} likes</span>
               </div>
               <p className="text-gray-600 mb-4">{post.caption}</p>
-              <div className="mt-4">
-                <h2>Comments:</h2>
+              <div className="mt-2">
+                <h2 className="mb-2">Comments:</h2>
                 {comments[post.id] &&
                   comments[post.id].map((comment) => (
                     <div key={comment.id} className="mb-2">
@@ -162,7 +162,7 @@ const ExplorePost = () => {
           </div>
         ))}
         <div className="flex justify-center items-center space-x-2 mt-8">
-          <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+          <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 mb-2 rounded-l" onClick={handlePreviousPage} disabled={currentPage === 1}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

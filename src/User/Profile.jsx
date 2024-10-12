@@ -111,22 +111,24 @@ const Profile = () => {
         </div>
   
         {/* User Details Section */}
-        <div className="flex flex-col justify-center">
-        <h1 className="text-2xl sm:text-4xl font-semibold text-gray-800 text-center mb-2">{name}</h1>
-  
-          <div className="flex justify-center md:justify-start space-x-6 mt-4">
-            <button
-              onClick={() => setShowFollowersModal(true)}
-              className="text-blue-500"
-            >
-              <span className="font-bold text-center">{totalFollowers}</span> Followers
-            </button>
-            <button
-              onClick={() => setShowFollowingModal(true)}
-              className="text-blue-500 text-center"
-            >
-              <span className="font-bold text center">{totalFollowing}</span> Following
-            </button>
+        <div className="flex flex-col items-center justify-center p-4 sm-p-8">
+  <h1 className="text-2xl sm:text-4xl font-semibold text-gray-800 text-center mb-2">
+    {name}
+  </h1>
+
+  <div className="flex justify-center md:justify-start space-x-6 mt-4">
+    <button
+      onClick={() => setShowFollowersModal(true)}
+      className="text-blue-500"
+    >
+      <span className="font-bold text-center">{totalFollowers}</span> Followers
+    </button>
+    <button
+      onClick={() => setShowFollowingModal(true)}
+      className="text-blue-500"
+    >
+      <span className="font-bold text-center">{totalFollowing}</span> Following
+    </button>
           </div>
   
           <div className="mt-4 text-center">
