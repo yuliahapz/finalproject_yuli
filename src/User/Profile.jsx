@@ -112,26 +112,26 @@ const Profile = () => {
   
         {/* User Details Section */}
         <div className="flex flex-col justify-center">
-        <h1 className="text-2xl sm:text-4xl font-semibold text-gray-800 mb-2">{name}</h1>
+        <h1 className="text-2xl sm:text-4xl font-semibold text-gray-800 text-center mb-2">{name}</h1>
   
           <div className="flex justify-center md:justify-start space-x-6 mt-4">
             <button
               onClick={() => setShowFollowersModal(true)}
               className="text-blue-500"
             >
-              <span className="font-bold">{totalFollowers}</span> Followers
+              <span className="font-bold text-center">{totalFollowers}</span> Followers
             </button>
             <button
               onClick={() => setShowFollowingModal(true)}
-              className="text-blue-500"
+              className="text-blue-500 text-center"
             >
-              <span className="font-bold">{totalFollowing}</span> Following
+              <span className="font-bold text center">{totalFollowing}</span> Following
             </button>
           </div>
   
-          <div className="mt-4 text-center md:text-left">
+          <div className="mt-4 text-center">
             <p className="text-sm">{id}</p>
-            <p className="text-sm">{username}</p>
+            <p className="text-sm ">{username}</p>
             <p className="text-sm">{email}</p>
             <p className="text-sm">{bio || 'No bio available'}</p>
             <p className="text-sm">
@@ -148,14 +148,12 @@ const Profile = () => {
           </div>
         </div>
       </div>
-  
       {/* Posts Section */}
-      {/* Posts Section */}
-<div 
+      <div 
   className="w-full max-w-6xl border-gray-300 mx-auto"
   style={{ maxHeight: "calc(100vh - 80px)", overflowY: "auto" }}
 >
-  {id && <PostByUser id={id} />}
+  {id && <PostByUser id={id} userId={id} />} {/* Pass the logged-in user's ID as userId */}
 </div>
 
       {/* Modal for Followers */}

@@ -87,17 +87,27 @@ const Register = () => {
       {/* Register Card */}
       <div className="bg-white p-8 shadow-lg w-[400px] h-[600px] rounded-2xl border-2 border-black hover:border-white transition duration-300 ease-in-out">
         <div className="flex justify-center mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" center viewBox="0 0 24 24">
-            <path d="M18 5l-2-3h-8l-2 3h-6v17h24v-17h-6zm4 7h-4.079c.581 3.754-2.312 7-5.921 7-3.612 0-6.501-3.248-5.921-7h-4.079v-5h5.07l2-3h5.859l2 3h5.071v5zm-10-3c-2.243 0-4 1.73-4 3.939 0 2.239 1.794 4.061 4 4.061s4-1.822 4-4.061c0-2.209-1.757-3.939-4-3.939zm-.436 3.555c-.632.503-1.461.5-1.852-.006-.39-.506-.194-1.324.438-1.827.632-.502 1.461-.499 1.851.007.391.505.195 1.323-.437 1.826z"/>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="gray-800"
+            className="size-20"
+          >
+            <path d="M12 9a3.75 3.75 0 1 0 0 7.5A3.75 3.75 0 0 0 12 9Z" />
+            <path
+              fillRule="evenodd"
+              d="M9.344 3.071a49.52 49.52 0 0 1 5.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 0 1-3 3h-15a3 3 0 0 1-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 0 0 1.11-.71l.822-1.315a2.942 2.942 0 0 1 2.332-1.39ZM6.75 12.75a5.25 5.25 0 1 1 10.5 0 5.25 5.25 0 0 1-10.5 0Zm12-1.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+              clipRule="evenodd"
+            />
           </svg>
         </div>
 
         {/* Sign In and Sign Up links side by side */}
         <div className="flex justify-between ">
-          <Link to="/login" className="text-gray-800 text-lg ml-16 font-semibold">
+          <Link to="/login" className="text-gray-800 text-lg ml-16 mb-3 font-semibold">
             Sign In
           </Link>
-          <Link to="/register" className="text-gray-800 text-lg mr-16 font-semibold">
+          <Link to="/register" className="text-gray-800 text-lg mr-16 mb-3 font-semibold">
             Sign Up
           </Link>
         </div>
@@ -199,7 +209,7 @@ const Register = () => {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500"
           /> */}
 
-          <button type="submit" className="w-full p-3 font-semibold text-white bg-black rounded-md hover:bg-gray-800 transition duration-300 ease-in-out">
+          <button type="submit" className="w-full p-2 text-white bg-gray-800 rounded-md hover:bg-blue-500 transition duration-300 ease-in-out">
             Register
           </button>
         </form>

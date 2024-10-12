@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
 
-const CreateComment = ({ postId, onAddComment, onClose }) => {
+const CreateComment = ({ postId, onAddComment }) => {
   const [comment, setComment] = useState('');
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newComment = e.target[0].value;
-    
+
     try {
       const response = await axios.post(
         `https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/create-comment/`,
-        { postId, comment: newComment }, // Include postId in the request body
+        { postId, comment },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -22,13 +20,11 @@ const CreateComment = ({ postId, onAddComment, onClose }) => {
           },
         }
       );
-      // Handle successful response from server
-      onAddComment(postId, response.data);
-      setComment(''); // Clear input field
-      Navigate('/explore');
+      // Tambah komentar ke daftar komentar
+      onAddComment(response.data.comment);
+      setComment(''); // Kosongkan input setelah submit
     } catch (error) {
-      // Handle error
-      setError('Failed to add comment. Please try again.'); // Example error message
+      setError('Failed to add comment. Please try again.');
       console.error('Error adding comment:', error);
     }
   };
@@ -43,7 +39,7 @@ const CreateComment = ({ postId, onAddComment, onClose }) => {
           placeholder="Enter your comment"
           className="w-full p-2 mb-2 border border-gray-300 rounded-lg"
         />
-        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg ml-2">
+        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
           Comment
         </button>
         {error && <div className="text-red-500 mt-2">{error}</div>}

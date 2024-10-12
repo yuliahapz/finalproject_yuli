@@ -2,9 +2,9 @@ import axios from "axios";
 import { useState, useRef } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
-const CreatePost = () => {
-  const [imageUrl, setImageUrl] = useState(''); // URL for the image after upload
+import PropTypes from 'prop-types';
+const UpdatePost = ({ postId }) => {
+  const [setImageUrl] = useState(''); // URL for the image after upload
   const [previewUrl, setPreviewUrl] = useState(''); // Preview URL for the selected image
   const [caption, setCaption] = useState('');   // Caption for the post
   const [file, setFile] = useState(null);       // Selected file
@@ -24,7 +24,8 @@ const CreatePost = () => {
   };
 
   if (!token) {
-    toast.error("Token is missing. Please log in again.");
+    toast.error("Your session has expired. Please log in again.");
+    setTimeout(() => { navigate('/login'); }, 200);
     return null; 
   }
 
@@ -50,7 +51,6 @@ const CreatePost = () => {
 
       setImageUrl(response.data.url);
       toast.success('Image uploaded successfully!');
-      navigate('/');
       return response.data.url; // Return the uploaded image URL
     } catch (error) {
       console.error("Upload failed:", error.response?.data || error.message);
@@ -93,13 +93,14 @@ const CreatePost = () => {
         },
       };
 
+      // Update the post by postId
       const response = await axios.post(
-        'https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/create-post',
+        `https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/update-post/${postId}`,  // Use postId here
         postData,
         config
       );
       console.log(response);
-      toast.success('Post created successfully!');
+      toast.success('Post updated successfully!');
 
       setCaption('');
       setImageUrl('');
@@ -107,18 +108,22 @@ const CreatePost = () => {
       setFile(null);
       fileInputRef.current.value = null;
     } catch (error) {
-      console.error("Failed to create post:", error.response?.data || error.message);
-      toast.error('Failed to create post');
+      console.error("Failed to update post:", error.response?.data || error.message);
+      toast.error('Failed to update post');
     } finally {
       setLoading(false);
     }
   };
 
+  UpdatePost.propTypes = {
+    postId: PropTypes.string.isRequired,
+  };
+ 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Create Post</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">Update Post</h1>
         <form onSubmit={handleFormSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -156,7 +161,7 @@ const CreatePost = () => {
             type="submit" 
             disabled={loading} 
             className={`w-full py-2 px-4 font-semibold rounded-lg shadow-md text-white ${loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}>
-            {loading ? 'Submitting...' : 'Submit'}
+            {loading ? 'Submitting...' : 'Update Post'}
           </button>
         </form>
       </div>
@@ -164,4 +169,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default UpdatePost;

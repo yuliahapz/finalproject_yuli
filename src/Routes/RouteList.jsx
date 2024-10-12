@@ -1,3 +1,4 @@
+import ProtectedRoute from "../Routes/ProtectedRoute"; // Import ProtectedRoute
 import Register from "../Pages/Auth/Register";
 import Login from "../Pages/Auth/Login";
 import CreatePost from "../Pages/Post/CreatePost";
@@ -21,95 +22,171 @@ import FollowUser from "../Pages/Follow/FollowUser";
 import MyFollowingStories from "../Pages/Story/MyFollowingStories";
 import PostByUser from "../Pages/Post/PostByUser";
 
-
-export const routeList =[
-    {
-         path : "/login",
-         element: <Login />
-    },
-    {
-        path : "/register",
-        element: <Register />
-    },
-    {
-        path : "/createpost",
-        element: <CreatePost />
-    },
-    {
-        path : "/updatepost",
-        element: <UpdatePost />
-    },
-
-    {
-        path : "/Profile",
-        element: <Profile />
-    },
-    {
-        path : "/updateprofile",
-        element: <UpdateProfile />
-    },{
-        path : "/MyFollowers",
-        element: <MyFollowers />
-    },
-    {
-        path : "/MyFollowing",
-        element: <MyFollowing />
-    },
-    {
-        path : "/CreateComment",
-        element: <CreateComment />
-    },
-    {
-        path : "/DeleteComment",
-        element: <DeleteComment />
-    },
-    {
-        path : "/Likepost",
-        element: <LikePost />
-    },
-    {
-        path : "/logout",
-        element : <Logout />
-    },
-    {   path :"/storybyid/:storyId",
-        element:<StoryById />},
-    {
-        path : "/search",
-        element : <SearchUser />
-    },
-    {
-        path : "/profile/:id",
-        element : <ProfileSearch />
-    },
-    {
-        path : "/Post/:id",
-        element : <PostById />
-    },
-    {
-        path : "/explore",
-        element : <Explore />
-    },
-    {
-        path : "sidebar",
-        element : <Sidebar />
-    },
-    {
-        path : "home",
-        element : <Home />
-    },
-    {
-        path : "followuser",
-        element : <FollowUser />
-    },
-    {
-        path : "myfollowingstories",
-        elemeny : <MyFollowingStories />
-    },
-    {
-        path : "PostByUser",
-        element : <PostByUser />
-    }
-    
-]
+export const routeList = [
+  {
+    path: "/login",
+    element: <Login />
+  },
+  {
+    path: "/register",
+    element: <Register />
+  },
+  {
+    path: "/createpost",
+    element: (
+      <ProtectedRoute>
+        <CreatePost />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/updatepost",
+    element: (
+      <ProtectedRoute>
+        <UpdatePost />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRoute>
+        <Profile />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/updateprofile",
+    element: (
+      <ProtectedRoute>
+        <UpdateProfile />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/myfollowers",
+    element: (
+      <ProtectedRoute>
+        <MyFollowers />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/myfollowing",
+    element: (
+      <ProtectedRoute>
+        <MyFollowing />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/createcomment",
+    element: (
+      <ProtectedRoute>
+        <CreateComment />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/deletecomment",
+    element: (
+      <ProtectedRoute>
+        <DeleteComment />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/likepost",
+    element: (
+      <ProtectedRoute>
+        <LikePost />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/logout",
+    element: <Logout />
+  },
+  {
+    path: "/storybyid/:storyId",
+    element: (
+      <ProtectedRoute>
+        <StoryById />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/search",
+    element: (
+      <ProtectedRoute>
+        <SearchUser />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/profile/:id",
+    element: (
+      <ProtectedRoute>
+        <ProfileSearch />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/post/:id",
+    element: (
+      <ProtectedRoute>
+        <PostById />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/explore",
+    element: (
+      <ProtectedRoute>
+        <Explore />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/sidebar",
+    element: (
+      <ProtectedRoute>
+        <Sidebar />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/home",
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/followuser",
+    element: (
+      <ProtectedRoute>
+        <FollowUser />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/myfollowingstories",
+    element: (
+      <ProtectedRoute>
+        <MyFollowingStories />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/postbyuser",
+    element: (
+      <ProtectedRoute>
+        <PostByUser />
+      </ProtectedRoute>
+    )
+  }
+];
 
 export default routeList;

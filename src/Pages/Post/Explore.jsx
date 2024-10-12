@@ -87,11 +87,10 @@ const ExplorePost = () => {
   };
 
   const handleCommentAdded = (postId, newComment) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId ? { ...post, comments: [...post.comments, newComment] } : post
-      )
-    );
+    setComments((prevComments) => ({
+      ...prevComments,
+      [postId]: [...(prevComments[postId] || []), newComment], // Tambahkan komentar baru ke post
+    }));
   };
 
   if (loading) {

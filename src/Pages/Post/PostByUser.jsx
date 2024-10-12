@@ -1,13 +1,12 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Image } from 'antd';
 
 const PostByUser = ({ id }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -46,14 +45,6 @@ const PostByUser = ({ id }) => {
     id: PropTypes.string.isRequired,
   };
 
-  const handlePostClick = (post) => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
-  };
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -94,37 +85,24 @@ const PostByUser = ({ id }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex overflow-x-auto space-x-4 py-4">
+    <div className="container mx-auto">
+      <div className="flex overflow-x-auto space-x-4 py-2">
         {posts.map((post) => (
           <div
             key={post.id}
             className="w-64 h-64 flex-shrink-0 bg-white rounded-lg shadow-md overflow-hidden"
           >
-            <img
-              src={post.imageUrl}
-              alt={post.caption}
-              className="w-full h-full object-cover cursor-pointer"
-              onClick={() => handlePostClick(post)}
+            <Image
+          src={post.imageUrl}
+          alt={post.caption}
+          height={256} // Set to 256 for a square image
+          width={256}  // Set to 256 for a square image
+          className="w-full h-full object-cover cursor-pointer" // Ensures the image covers the div while maintaining the aspect ratio
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = 'https://cdn1-production-images-kly.akamaized.net/J_qaSn7xpC5d-kbHx-wCsOiFsuY=/800x450/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4770934/original/018943800_1710311605-mountains-8451480_1280.jpg';
+          }}
             />
-            {isModalOpen && selectedPost === post && (
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg shadow-lg max-w-3xl w-full">
-                  <div className="flex justify-end p-2">
-                    <button className="text-gray-500 hover:text-gray-700" onClick={toggleModal}>
-                      x
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <img
-                      src={post.imageUrl || "https://carapandang.com/uploads/news/DsqaUeQGqut5MUneFABnolWx6FUpK58kqHPscu2w.jpg"}
-                      alt={post.caption || 'Post image'}
-                      className="w-full h-auto rounded-lg"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         ))}
       </div>

@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from 'react-hot-toast';
 import FollowButton from "./FollowButton";
 import unfollowUser from "./UnfollowUser";
+
 export const FollowUser = ({ userId, isFollowing, onFollowChange }) => {
     const [loading, setLoading] = useState(false);
 
@@ -25,7 +26,7 @@ export const FollowUser = ({ userId, isFollowing, onFollowChange }) => {
                 }
             );
             toast.success("User followed!");
-            onFollowChange(true); // Update status follow
+            onFollowChange(true, 1); // Update status follow
         } catch (error) {
             console.error("Error following user:", error.response ? error.response.data : error);
             const errorMessage = error.response?.data?.message || "Failed to follow user.";
@@ -37,7 +38,8 @@ export const FollowUser = ({ userId, isFollowing, onFollowChange }) => {
     const handleFollowToggle = async () => {
         setLoading(true);
         if (isFollowing) {
-            await unfollowUser(); // Panggil fungsi unfollow di sini
+            await unfollowUser(userId); // Panggil fungsi unfollow di sini
+            onFollowChange(false, -1); // Hanya memanggil ini di sini
         } else {
             await followUser(); // Panggil fungsi follow di sini
         }
