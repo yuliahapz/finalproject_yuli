@@ -48,7 +48,7 @@ const PostById = () => {
   return (
     <div className="flexjustify-left min-h-screen bg-gray-100 p-4">
       <button
-        className="mb-4 bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
+        className="mb-4 bg-blue-500 hover:bg-blue-700 text-white  px-4 rounded"
         onClick={handleBack}
       >
         Back

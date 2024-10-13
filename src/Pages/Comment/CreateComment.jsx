@@ -1,17 +1,23 @@
 import { useState } from 'react';
 import axios from 'axios';
-
+import PropTypes from 'prop-types';
 const CreateComment = ({ postId, onAddComment }) => {
   const [comment, setComment] = useState('');
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!comment) return // Jika comment kosong, keluar dari fungsi ini
+    
+    if (!comment.trim()) {
+      setError('Comment cannot be empty.');
+      return;
+    }
 
     try {
       const response = await axios.post(
         `https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1/create-comment/`,
-        { postId, comment },
+        { postId: postId, comment : comment },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -21,12 +27,18 @@ const CreateComment = ({ postId, onAddComment }) => {
         }
       );
       // Tambah komentar ke daftar komentar
-      onAddComment(response.data.comment);
+      const newComment = response.data.data;
+      onAddComment(postId, newComment);
       setComment(''); // Kosongkan input setelah submit
     } catch (error) {
       setError('Failed to add comment. Please try again.');
       console.error('Error adding comment:', error);
     }
+  };
+
+  CreateComment.propTypes = {
+    postId: PropTypes.string.isRequired,
+    onAddComment: PropTypes.func.isRequired,
   };
 
   return (

@@ -3,17 +3,17 @@ import Register from "../Pages/Auth/Register";
 import Login from "../Pages/Auth/Login";
 import CreatePost from "../Pages/Post/CreatePost";
 import UpdatePost from "../Pages/Post/UpdatePost";
-import Profile from "../User/Profile";
-import UpdateProfile from "../User/UpdateProfile";
-import MyFollowers from "../User/MyFollowers";
-import MyFollowing from "../User/MyFollowing";
+import Profile from "../Pages/User/Profile";
+import UpdateProfile from "../Pages/User/UpdateProfile";
+import MyFollowers from "../Pages/User/MyFollowers";
+import MyFollowing from "../Pages/User/MyFollowing";
 import CreateComment from "../Pages/Comment/CreateComment";
 import DeleteComment from "../Pages/Comment/DeleteComment";
 import LikePost from "../Pages/Like/LikePost";
 import Logout from "../Pages/Auth/Logout";
 import StoryById from "../Pages/Story/StoryById";
-import SearchUser from "../User/SearchUserbyId";
-import ProfileSearch from "../User/ProfileSearch";
+import SearchUser from "../Pages/User/SearchUserbyId";
+import ProfileSearch from "../Pages/User/ProfileSearch";
 import PostById from "../Pages/Post/PostById";
 import Explore from "../Pages/Post/Explore";
 import Sidebar from "../Pages/Component/Sidebar";
@@ -21,6 +21,8 @@ import Home from "../Home";
 import FollowUser from "../Pages/Follow/FollowUser";
 import MyFollowingStories from "../Pages/Story/MyFollowingStories";
 import PostByUser from "../Pages/Post/PostByUser";
+import DeletePost from "../Pages/Post/DeletePost";
+import MyPost from "../Pages/Post/MyPost";
 
 export const routeList = [
   {
@@ -184,6 +186,30 @@ export const routeList = [
     element: (
       <ProtectedRoute>
         <PostByUser />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/UpdatePost/:id",
+    element: (
+      <ProtectedRoute>
+        <UpdatePost />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/DeletePost/:id",
+    element: (
+      <ProtectedRoute>
+        <DeletePost />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: "/mypost",
+    element: (
+      <ProtectedRoute>
+        <MyPost />
       </ProtectedRoute>
     )
   }

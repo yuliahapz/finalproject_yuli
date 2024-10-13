@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from 'react-hot-toast';
-import FollowUser from "../Pages/Follow/FollowUser";
-import PostByUser from "../Pages/Post/PostByUser";
+import FollowUser from "../Follow/FollowUser";
+import PostByUser from "../Post/PostByUser";
 import { Image, Modal } from "antd";
 
 const ProfileSearch = () => {
@@ -178,11 +178,11 @@ const ProfileSearch = () => {
             </div>
 
             {/* Posts */}
-            <div
-                className="w-full max-w-6xl mx-auto border-gray-300"
-                style={{ maxHeight: "calc(100vh - 80px)", overflowY: "auto" }}
-            >
-                <PostByUser id={id} />
+            <div 
+                className="grid grid-cols-1 w-full max-w-6xl border-gray-300 mx-auto"
+                style={{ maxHeight: "calc(100vh - 80px)", overflowY: "auto", padding: '20px', }}
+                >
+                {id && <PostByUser id={id} userId={id} />} {/* Pass the logged-in user's ID as userId */}
             </div>
 
             {/* Modal for Following List */}

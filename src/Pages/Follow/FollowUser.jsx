@@ -37,13 +37,19 @@ export const FollowUser = ({ userId, isFollowing, onFollowChange }) => {
     // Handler untuk toggle follow/unfollow
     const handleFollowToggle = async () => {
         setLoading(true);
-        if (isFollowing) {
-            await unfollowUser(userId); // Panggil fungsi unfollow di sini
-            onFollowChange(false, -1); // Hanya memanggil ini di sini
-        } else {
-            await followUser(); // Panggil fungsi follow di sini
+        try {
+            if (isFollowing) {
+                await unfollowUser(userId); // Panggil fungsi unfollow di sini
+                onFollowChange(false, -1); // Update state jika berhasil
+            } else {
+                await followUser(); // Panggil fungsi follow di sini
+            }
+        } catch (error) {
+            console.error("Error toggling follow state:", error);
+            toast.error("Something went wrong while updating follow status.");
+        } finally {
+            setLoading(false); // Pastikan loading selalu dihentikan
         }
-        setLoading(false);
     };
 
     return (

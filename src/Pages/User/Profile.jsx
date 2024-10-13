@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Image } from "antd";
 import MyFollowing from './MyFollowing';
 import MyFollowers from './MyFollowers';
-import PostByUser from '../Pages/Post/PostByUser';
+import MyPost from "../Post/MyPost";
+import Logout from "../Auth/Logout";
 
 const Profile = () => {
   const [username, setUsername] = useState("");
@@ -19,6 +20,7 @@ const Profile = () => {
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [showFollowersModal, setShowFollowersModal] = useState(false); // Modal state for followers
   const [showFollowingModal, setShowFollowingModal] = useState(false); // Modal state for following
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [id, setId] = useState(null); 
   const navigate = useNavigate();
 
@@ -52,6 +54,7 @@ const Profile = () => {
         } = response.data.data;
 
         setId(id); 
+        console.log("user id:", id);
         setUsername(username);
         setName(name);
         setEmail(email);
@@ -63,25 +66,35 @@ const Profile = () => {
         setTotalFollowers(totalFollowers);
       } catch (error) {
         toast.error("Failed to fetch profile data", error);
+        console.error("Error fetching profile data:", error);
       }
     };
 
     fetchProfileData();
   }, [navigate]);
 
+  const handleCancel = () => {
+    setIsLogoutModalVisible(false);
+  };
+  
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
+    setIsLogoutModalVisible(false);
   };
 
   return (
     <div className="container mx-auto px-4">
       {/* Action Buttons */}
       <div className="flex justify-between p-4 mb-6">
-        <button onClick={() => navigate(-1)} className="bg-white-500 text-xs py-1 px-2 rounded">Back</button>
-        <button onClick={handleLogout} className="bg-white-500 text-xs py-1 px-2 rounded">Logout</button>
+        <button onClick={() => navigate(-1)} className="bg-white text-xs py-2 px-4 rounded shadow">Back</button>
+        <button onClick={() => setIsLogoutModalVisible(true)} className="bg-white text-xs py-2 px-4 rounded shadow">Logout</button>
       </div>
-  
+      <Logout
+        isModalVisible={isLogoutModalVisible}
+        handleCancel={handleCancel}
+        handleLogout={handleLogout}
+      />
       {/* Main Profile Content */}
       <div className="grid grid-cols-1 md:grid-cols-2 border-b gap-8 mb-8 pb-4">
         {/* Profile Image and Edit Button */}
@@ -109,31 +122,29 @@ const Profile = () => {
             Edit Profile
           </button>
         </div>
-  
         {/* User Details Section */}
-        <div className="flex flex-col items-center justify-center p-4 sm-p-8">
-  <h1 className="text-2xl sm:text-4xl font-semibold text-gray-800 text-center mb-2">
-    {name}
-  </h1>
-
-  <div className="flex justify-center md:justify-start space-x-6 mt-4">
-    <button
-      onClick={() => setShowFollowersModal(true)}
-      className="text-blue-500"
-    >
-      <span className="font-bold text-center">{totalFollowers}</span> Followers
-    </button>
-    <button
-      onClick={() => setShowFollowingModal(true)}
-      className="text-blue-500"
-    >
-      <span className="font-bold text-center">{totalFollowing}</span> Following
-    </button>
-          </div>
+        <div className="flex flex-col items-center justify-center p-4 sm:p-8">
+          <h1 className="text-2xl sm:text-4xl font-semibold text-gray-800 text-center mb-2">
+            {name}
+          </h1>
   
+          <div className="flex justify-center md:justify-start space-x-6 mt-4">
+            <button
+              onClick={() => setShowFollowersModal(true)}
+              className="text-blue-500"
+            >
+              <span className="font-bold text-center">{totalFollowers}</span> Followers
+            </button>
+            <button
+              onClick={() => setShowFollowingModal(true)}
+              className="text-blue-500"
+            >
+              <span className="font-bold text-center">{totalFollowing}</span> Following
+            </button>
+          </div>
           <div className="mt-4 text-center">
             <p className="text-sm">{id}</p>
-            <p className="text-sm ">{username}</p>
+            <p className="text-sm">{username}</p>
             <p className="text-sm">{email}</p>
             <p className="text-sm">{bio || 'No bio available'}</p>
             <p className="text-sm">
@@ -152,12 +163,12 @@ const Profile = () => {
       </div>
       {/* Posts Section */}
       <div 
-  className="w-full max-w-6xl border-gray-300 mx-auto"
-  style={{ maxHeight: "calc(100vh - 80px)", overflowY: "auto" }}
->
-  {id && <PostByUser id={id} userId={id} />} {/* Pass the logged-in user's ID as userId */}
-</div>
-
+        className="grid grid-cols-1 w-full max-w-6xl border-gray-300 mx-auto"
+        style={{ maxHeight: "calc(100vh - 80px)", overflowY: "auto", padding: '20px' }}
+      >
+        {id && <MyPost id={id} userId={id} />} {/* Pass the logged-in user's ID as userId */}
+      </div>
+  
       {/* Modal for Followers */}
       {showFollowersModal && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
@@ -166,13 +177,12 @@ const Profile = () => {
               className="text-right text-gray-600 mb-4"
               onClick={() => setShowFollowersModal(false)}
             >
-              X
+   X
             </button>
             <MyFollowers />
           </div>
         </div>
       )}
-  
       {/* Modal for Following */}
       {showFollowingModal && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
